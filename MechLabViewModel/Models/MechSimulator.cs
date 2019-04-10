@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MechLabViewModel
+namespace MechLabLibrary.Models
 {
-    interface IMechObject
+    public class MechSimulator
     {
     }
 }
