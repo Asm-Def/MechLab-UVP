@@ -13,5 +13,7 @@ namespace MechLabLibrary.Models
         public double VY { get; set; }
         public double M { get; set; }
         MechObjectView _mechObjectView;
+        MechSimulator _parent;
+
     }
 }

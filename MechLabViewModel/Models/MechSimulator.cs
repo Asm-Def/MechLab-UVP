@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading;
 namespace MechLabLibrary.Models
 {
     public class MechSimulator
     {
         MechObject[] _objects;
         /// <summary>
-        /// 当Running=true时持续对_objects进行模拟
+        /// 控制模拟的进行，当Running=true时持续对_objects进行模拟
         /// </summary>
         bool Running = false;
         /// <summary>
@@ -16,6 +16,7 @@ namespace MechLabLibrary.Models
         /// </summary>
         void Simulate()
         {
+            Thread[] threads;
             while(true)
             {
                 if (!Running) continue;
