@@ -6,21 +6,31 @@ namespace MechLabLibrary.Models
 {
     public class MechSimulator
     {
-        MechObject[] _objects;
+        public List<MechObject> _objects = new List<MechObject>();
+
         /// <summary>
         /// 控制模拟的进行，当Running=true时持续对_objects进行模拟
         /// </summary>
-        bool Running = false;
+        public bool Running = false;
         /// <summary>
-        /// 应在程序开始时另开一个线程执行
+        /// 开始进行模拟
         /// </summary>
-        void Simulate()
+        public void Start()
         {
-            Thread[] threads;
-            while(true)
+            foreach(MechObject obj in _objects)
             {
-                if (!Running) continue;
-
+                obj.timer = new Timer(new TimerCallback(obj.Simulate));
+                obj.timer.Change(0, 10);
+            }
+        }
+        /// <summary>
+        /// 停止模拟
+        /// </summary>
+        public void Stop()
+        {
+            foreach(MechObject obj in _objects)
+            {
+                obj.timer.Dispose();
             }
         }
     }
