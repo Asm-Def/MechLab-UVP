@@ -19,9 +19,10 @@ namespace MechLabLibrary.Models
         {
             foreach(MechObject obj in _objects)
             {
-                obj.timer = new Timer(new TimerCallback(obj.Simulate));
-                obj.timer.Change(0, 10);
+                obj.Init();
+                obj._timer.Change(0, 10);
             }
+            Running = true;
         }
         /// <summary>
         /// 停止模拟
@@ -30,8 +31,9 @@ namespace MechLabLibrary.Models
         {
             foreach(MechObject obj in _objects)
             {
-                obj.timer.Dispose();
+                obj._timer.Dispose();
             }
+            Running = false;
         }
     }
 }
