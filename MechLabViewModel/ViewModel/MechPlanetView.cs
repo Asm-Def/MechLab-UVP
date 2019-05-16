@@ -5,12 +5,15 @@ using MechLabLibrary.Models;
 
 namespace MechLabLibrary.ViewModel
 {
-    class MechPlanetView : MechObjectView
+    public class MechPlanetView : MechObjectView
     {
-        public double R { get; set; }
-        public new void Refresh()
-        {
+        public MechPlanetView(MechPlanet mechPlanet, MechLabViewModel mechLab)
+            : base(mechPlanet, mechLab) { }
 
+        public double ViewR
+        {
+            get { return ((MechPlanet)_mechObject).R / _parent.EyeShot; }
+            set { ((MechPlanet)_mechObject).R = ViewR * _parent.EyeShot; }
         }
     }
 }
