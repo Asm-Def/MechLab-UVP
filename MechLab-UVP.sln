@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechLab-UVP", "MechLab-UVP\MechLab-UVP.csproj", "{13D5D02C-2EBC-4081-BEAB-D39808E7FD6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MechLabLibrary", "MechLabViewModel\MechLabLibrary.csproj", "{4D435E9C-1113-4D09-9F19-541CC7D6CBEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MechLabLibrary", "MechLabLibrary\MechLabLibrary.csproj", "{4D435E9C-1113-4D09-9F19-541CC7D6CBEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechLabLibraryTest", "MechLabLibraryTest\MechLabLibraryTest.csproj", "{C5B1B894-B761-4DB7-9175-B7A9F1229AA5}"
 EndProject
