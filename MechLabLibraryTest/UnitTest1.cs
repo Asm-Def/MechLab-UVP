@@ -32,7 +32,7 @@ namespace Tests
             StreamReader sr = null;
             try
             {
-                sr = new StreamReader("D:\\93567\\source\\repos\\MechLab-UVP\\MechLabLibraryTest\\input.txt", Encoding.Default);
+                sr = new StreamReader("input.txt", Encoding.Default);
             }
             catch (Exception exc)
             {

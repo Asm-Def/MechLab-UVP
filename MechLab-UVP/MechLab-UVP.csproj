@@ -128,7 +128,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="MechLab-UVP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -159,7 +158,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MechLabViewModel\MechLabLibrary.csproj">
+    <ProjectReference Include="..\MechLabLibrary\MechLabLibrary.csproj">
       <Project>{4d435e9c-1113-4d09-9f19-541cc7d6cbef}</Project>
       <Name>MechLabLibrary</Name>
     </ProjectReference>
