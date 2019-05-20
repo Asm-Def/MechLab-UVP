@@ -7,8 +7,8 @@ namespace MechLabLibrary.ViewModel
 {
     public class MechPlanetView : MechObjectView
     {
-        public MechPlanetView(MechPlanet mechPlanet, MechLabViewModel mechLab)
-            : base(mechPlanet, mechLab) { }
+        public MechPlanetView(int ID, MechPlanet mechPlanet, MechLabViewModel mechLab)
+            : base(ID, mechPlanet, mechLab) { }
 
         public double ViewR
         {

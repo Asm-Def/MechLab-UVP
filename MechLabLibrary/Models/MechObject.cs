@@ -53,6 +53,11 @@ namespace MechLabLibrary.Models
         /// 元件速度
         /// </summary>
         public Vector Velocity { get; set; } = new Vector();
+
+        /// <summary>
+        /// 物体编号
+        /// </summary>
+        readonly public int ID;
         public double X { get { return Location.X; } set { Location.X = X; } }
         public double Y { get { return Location.Y; } set { Location.Y = Y; } }
         public double VX { get { return Velocity.X; } set { Velocity.X = X; } }
@@ -64,8 +69,8 @@ namespace MechLabLibrary.Models
 
         public MechSimulator _parent { get; set; }
 
-        public MechObject() { M = 1; }
-        public MechObject(double x, double y, double vx, double vy, double m, MechSimulator p = null)
+        public MechObject(int ID) { M = 1; }
+        public MechObject(int ID, double x, double y, double vx, double vy, double m, MechSimulator p = null)
         {
             Location = new Vector(x, y);
             Velocity = new Vector(vx, vy);
@@ -80,11 +85,13 @@ namespace MechLabLibrary.Models
 
 #if DEBUG
         readonly DateTime Begin = DateTime.Now; // for test
-        public int ID;
+
 #endif
 
         public void Simulate(object state)
         {
+            if (_parent == null) return;
+
             const double G = 6.67e-5; // G: km^3 / t / s^2
             double ax = 0, ay = 0;
             foreach(MechObject obj in _parent._objects)

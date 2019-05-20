@@ -8,10 +8,6 @@ using System.Text;
 
 namespace Tests
 {
-    public class Obj : MechObject
-    {
-        public double tmp { get; set; }
-    }
     public class Tests
     {
         [SetUp]
@@ -39,7 +35,6 @@ namespace Tests
                 Console.WriteLine(exc.Message);
             }
             String line;
-            int c = 0;
             while((line = sr.ReadLine()) != null)
             {
                 string[] sArr = line.Split(' ');
@@ -49,7 +44,7 @@ namespace Tests
                 double vy = double.Parse(sArr[3]);
                 double m = double.Parse(sArr[4]);
                 double r = double.Parse(sArr[5]);
-                MechPlanet A = new MechPlanet(x, y, vx, vy, m, r, sim) { ID = c++ };
+                MechPlanet A = sim.AddPlanet(x, y, vx, vy, m, r);
 
                 sim._objects.Add(A);
             }

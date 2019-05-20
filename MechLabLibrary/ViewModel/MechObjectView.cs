@@ -8,6 +8,11 @@ namespace MechLabLibrary.ViewModel
     public class MechObjectView
     {
         /// <summary>
+        /// 物体编号
+        /// </summary>
+        readonly public int ID;
+
+        /// <summary>
         /// 在Canvas模型中的X坐标
         /// </summary>
         public double ViewX
@@ -23,14 +28,16 @@ namespace MechLabLibrary.ViewModel
             get { return (_mechObject.Y - _parent.Y) / _parent.EyeShot; }
             set { _mechObject.Y = ViewY * _parent.EyeShot + _parent.Y; }
         }
+
         /// <summary>
         /// 指向它的物理模型
         /// </summary>
         protected MechObject _mechObject;
         protected MechLabViewModel _parent;
 
-        public MechObjectView(MechObject mechObject, MechLabViewModel mechLab)
+        public MechObjectView(int ID, MechObject mechObject, MechLabViewModel mechLab)
         {
+            this.ID = ID;
             _mechObject = mechObject;
             _parent = mechLab;
         }

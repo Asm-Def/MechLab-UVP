@@ -12,6 +12,24 @@ namespace MechLabLibrary.Models
         /// 控制模拟的进行，当Running=true时持续对_objects进行模拟
         /// </summary>
         public bool Running = false;
+
+        /// <summary>
+        /// 获取新的Object
+        /// </summary>
+        public MechObject AddObject(double x = 0,double y = 0, double vx = 0, double vy = 0, double m = 1)
+        {
+            MechObject result = new MechObject(_objects.Count, x, y, vx, vy, m, this);
+            _objects.Add(result);
+            return result;
+        }
+
+        public MechPlanet AddPlanet(double x = 0, double y = 0, double vx = 0, double vy = 0, double m = 1, double r = 0)
+        {
+            MechPlanet result = new MechPlanet(_objects.Count, x, y, vx, vy, m, r, this);
+            _objects.Add(result);
+            return result;
+        }
+
         /// <summary>
         /// 开始进行模拟
         /// </summary>
@@ -24,6 +42,7 @@ namespace MechLabLibrary.Models
             }
             Running = true;
         }
+
         /// <summary>
         /// 停止模拟
         /// </summary>
@@ -35,5 +54,11 @@ namespace MechLabLibrary.Models
             }
             Running = false;
         }
+
+        /// <summary>
+        /// 场景编号
+        /// </summary>
+        public readonly Guid ID;
+        public MechSimulator() { ID = Guid.NewGuid(); }
     }
 }
