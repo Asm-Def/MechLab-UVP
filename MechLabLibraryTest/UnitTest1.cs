@@ -16,6 +16,14 @@ namespace Tests
         }
 
         [Test]
+        public void TestViewModel()
+        {
+            MechLabViewModel view = new MechLabViewModel();
+            MechObjectView obj = view.AddObjectView();
+            obj.Refresh();
+        }
+
+        [Test]
         public void Test1()
         {
             //MechPlanet planet = new MechPlanet();
