@@ -67,6 +67,21 @@ namespace MechLabLibrary.Models
         DateTime _lastTime { get; set; }
         MechObjectView _mechObjectView;
 
+        /// <summary>
+        /// 判断该MechObject对象是否是一个MechPlanet
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPlanet { get => typeof(MechPlanet).IsInstanceOfType(this); }
+        public string Type
+        {
+            get
+            {
+                // 此处应按照继承关系自底向上依次判断
+                if (IsPlanet) return "Planet";
+                else return "Object";
+            }
+        }
+
         public MechSimulator _parent { get; set; }
 
         public MechObject(int ID) { M = 1; }
@@ -77,6 +92,12 @@ namespace MechLabLibrary.Models
             _timer = new Timer(new TimerCallback(Simulate));
             M = m; _parent = p;
         }
+        /// <summary>
+        /// 拷贝构造函数，创建一个与simulator无关的mechobject拷贝
+        /// </summary>
+        /// <param name="obj"></param>
+        public MechObject(MechObject obj)
+           : this(obj.ID, obj.X, obj.Y, obj.VX, obj.VY, obj.M) { }
 
         public void Init()
         {

@@ -54,8 +54,9 @@ namespace MechLabLibrary.ViewModel
         }
 
         /// <summary>
-        /// 用于更新_mechObject的显示坐标(若不成功，则修改为手动计算ViewX ViewY属性值
+        /// 用于更新_mechObject的显示坐标
         /// </summary>
+        // TODO: 若不成功，则修改为手动计算ViewX ViewY属性值
         public void Refresh() => OnPropertyChanged("");
     }
 }

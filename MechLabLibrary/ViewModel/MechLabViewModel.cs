@@ -1,5 +1,6 @@
 ﻿using System;
 using MechLabLibrary.Models;
+using System.Threading;
 using System.Collections.Generic;
 
 /// <summary>
@@ -33,6 +34,8 @@ namespace MechLabLibrary.ViewModel
 
         private List<MechObjectView> _objectviews = new List<MechObjectView>();
 
+        private Timer _timer;
+
         /// <summary>
         /// 获取新的ObjectView
         /// </summary>
@@ -57,9 +60,31 @@ namespace MechLabLibrary.ViewModel
             return result;
         }
 
-        public MechLabViewModel(MechSimulator sim, double eyeshot=1, double x=0, double y=0)
+        /// <summary>
+        /// 从现有的MechSimulator创建MechLabView
+        /// </summary>
+        /// <param name="sim"></param>
+        /// <param name="eyeshot"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public MechLabViewModel(MechSimulator sim, double eyeshot = 1, double x = 0, double y = 0)
         {
+            _timer = new Timer((s) => { foreach (var obj in _objectviews) obj.Refresh(); }, null, 0, 1000 / 40); // 设定刷新频率
+
             Simulator = sim; EyeShot = eyeshot; X = x; Y = y;
+            foreach(MechObject mechObject in sim._objects)
+            {
+                if (mechObject.Type == "Planet")
+                {
+                    MechPlanetView planetView = new MechPlanetView(_objectviews.Count, (MechPlanet) mechObject, this);
+                    _objectviews.Add(planetView);
+                }
+                else
+                {
+                    MechObjectView objectView = new MechObjectView(_objectviews.Count, mechObject, this);
+                    _objectviews.Add(objectView);
+                }
+            }
         }
 
         public MechLabViewModel(double eyeshot = 1, double x = 0, double y = 0)
