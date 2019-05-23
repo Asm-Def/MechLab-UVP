@@ -10,6 +10,8 @@ namespace MechLabLibrary.ViewModel
 {
     public class MechLabViewModel
     {
+        public String Name { get; set; }
+
         /// <summary>
         /// 缩放比例,(vx, vy) = (x - X, y - Y) / EyeShot
         /// </summary>
@@ -71,7 +73,7 @@ namespace MechLabLibrary.ViewModel
         {
             _timer = new Timer((s) => { foreach (var obj in _objectviews) obj.Refresh(); }, null, 0, 1000 / 40); // 设定刷新频率
 
-            Simulator = sim; EyeShot = eyeshot; X = x; Y = y;
+            Simulator = sim; EyeShot = eyeshot; X = x; Y = y; Name = "New Lab";
             foreach(MechObject mechObject in sim._objects)
             {
                 if (mechObject.Type == "Planet")
