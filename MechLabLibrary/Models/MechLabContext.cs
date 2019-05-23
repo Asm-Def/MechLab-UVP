@@ -21,6 +21,7 @@ namespace MechLabLibrary.Models {
     public class MechLabData
     {
         public Guid LabID { get; set; }
+        public String Name { get; set; }
         public double ViewX { get; set; }
         public double ViewY { get; set; }
         public double Eyeshot { get; set; }
