@@ -6,13 +6,12 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using MechLab_UVP;
 
 namespace Tests
 {
     public class TestMain
     {
-        public static int Main()
+        public void Test()
         {
             MechLabViewModel viewModel = new MechLabViewModel();
             StreamReader sr = null;
@@ -37,13 +36,12 @@ namespace Tests
 
                 viewModel.AddPlanetView(x, y, vx, vy, m, r);
             }
-            while(true)
+
             {
                 viewModel.StartRunningCommand.Execute(null);
                 Console.ReadLine();
                 viewModel.StopRunningCommand.Execute(null);
             }
-            return 0;
         }
     }
     public class Tests
