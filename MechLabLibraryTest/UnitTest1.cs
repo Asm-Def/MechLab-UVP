@@ -5,6 +5,7 @@ using System.Threading;
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -13,6 +14,16 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
+        }
+
+        [Test]
+        public void TestServices()
+        {
+            MechLabServices mechLabServices = new MechLabServices();
+            List<MechLabData> tmp = mechLabServices.GetMechLabs().Result;
+            Console.WriteLine(tmp);
+            mechLabServices.SaveMechLab(new MechLabData(), new List<MechObject>());
+
         }
 
         [Test]

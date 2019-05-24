@@ -42,21 +42,18 @@ namespace MechLabLibrary.Models {
         public double VX { get; set; }
         public double VY { get; set; }
         public double M { get; set; }
-        public double? R { get; set; }
-        public MechObjectData(Guid ID, int objID, string tp, double x, double y, double vx, double vy, double m)
-        {
-            LabID = ID;
-            ObjectID = objID;
-            Type = tp;
-            X = x;
-            Y = y;
-            VX = vx;
-            VY = vy;
-            M = m;
-        }
-        public MechObjectData(Guid ID, int objID, string tp, double x, double y, double vx, double vy, double m, double r) : this(ID, objID, tp, x, y, vx, vy, m)
-        {
-            R = r;
-        }
+        public double R { get; set; }
+        //public MechObjectData(Guid ID, int objID, string tp, double x, double y, double vx, double vy, double m, double r = 0)
+        //{
+        //    LabID = ID;
+        //    ObjectID = objID;
+        //    Type = tp;
+        //    X = x;
+        //    Y = y;
+        //    VX = vx;
+        //    VY = vy;
+        //    M = m;
+        //    R = r;
+        //}
     }
 }

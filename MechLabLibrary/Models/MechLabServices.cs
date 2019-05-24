@@ -60,7 +60,7 @@ namespace MechLabLibrary.Models
             {
                 if (obj.Type == "Planet")
                 {
-                    sim.AddPlanet(obj.X, obj.Y, obj.VX, obj.VY, obj.M, obj.R == null ? 0 : (double)obj.R);
+                    sim.AddPlanet(obj.X, obj.Y, obj.VX, obj.VY, obj.M, obj.R);
                 }
                 else // "Object"
                 {
@@ -82,9 +82,9 @@ namespace MechLabLibrary.Models
             foreach(var obj in objects)
             {
                 if (obj.IsPlanet)
-                    mechObjects.Add(new MechObjectData(LabID, obj.ID, "Planet", obj.X, obj.Y, obj.VX, obj.VY, obj.M, ((MechPlanet)obj).R));
+                    mechObjects.Add(new MechObjectData { LabID = LabID, ObjectID = obj.ID, Type="Planet", X=obj.X, Y=obj.Y, VX=obj.VX, VY=obj.VY, M=obj.M, R = ((MechPlanet)obj).R });
                 else
-                    mechObjects.Add(new MechObjectData(LabID, obj.ID, "Object", obj.X, obj.Y, obj.VX, obj.VY, obj.M));
+                    mechObjects.Add(new MechObjectData { LabID = LabID, ObjectID=obj.ID, Type="Object", X=obj.X, Y=obj.Y, VX=obj.VX, VY=obj.VY, M=obj.M });
             }
             if(MechLabExists(mechLabData.LabID))
             {
