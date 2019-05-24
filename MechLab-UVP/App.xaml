@@ -2,6 +2,13 @@
     x:Class="MechLab_UVP.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:MechLab_UVP.Converters"
     xmlns:local="using:MechLab_UVP">
-
+    <Application.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="TrueToVisibleConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="FalseToVisibleConverter" IsReversed="True" />
+        <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converters:ByteToBitmapImageConverter x:Key="ByteToBitmapImageConverter" />
+    </Application.Resources>
 </Application>
