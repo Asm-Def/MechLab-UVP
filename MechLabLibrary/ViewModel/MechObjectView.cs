@@ -32,6 +32,24 @@ namespace MechLabLibrary.ViewModel
             set { _mechObject.Y = (ViewY * _parent.EyeShot) + _parent.Y; }
         }
 
+        public double VX
+        {
+            get => _mechObject.VX;
+            set { _mechObject.VX = VX; OnPropertyChanged(); }
+        }
+
+        public double VY
+        {
+            get => _mechObject.VY;
+            set { _mechObject.VY = VY; OnPropertyChanged(); }
+        }
+
+        public double M
+        {
+            get => _mechObject.M;
+            set { _mechObject.M = M; OnPropertyChanged(); }
+        }
+
         /// <summary>
         /// 指向它的物理模型
         /// </summary>
@@ -57,6 +75,6 @@ namespace MechLabLibrary.ViewModel
         /// 用于更新_mechObject的显示坐标
         /// </summary>
         // TODO: 若不成功，则修改为手动计算ViewX ViewY属性值
-        public void Refresh() => OnPropertyChanged("");
+        public void Refresh() { if(_parent.IsRunning) OnPropertyChanged(""); }
     }
 }
