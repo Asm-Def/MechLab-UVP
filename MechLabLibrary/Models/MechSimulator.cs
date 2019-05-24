@@ -87,7 +87,7 @@ namespace MechLabLibrary.Models
         /// <summary>
         /// 场景编号
         /// </summary>
-        public readonly Guid ID;
+        public Guid ID { get; set; }
         public MechSimulator() { ID = Guid.NewGuid(); }
         public MechSimulator(Guid ID) { this.ID = ID; }
         public MechSimulator(Guid ID, List<MechObject> objects) : this(ID)

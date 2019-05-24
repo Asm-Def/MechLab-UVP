@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <StartupObject>Tests.TestMain</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MechLab-UVP\MechLab-UVP.csproj" />
     <ProjectReference Include="..\MechLabLibrary\MechLabLibrary.csproj" />
   </ItemGroup>
 

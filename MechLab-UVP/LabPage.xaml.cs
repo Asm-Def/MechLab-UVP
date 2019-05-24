@@ -32,8 +32,10 @@ namespace MechLab_UVP
         public LabPage(Guid id)
         {
             this.InitializeComponent();
-            ViewModel = ViewModelLocator.Instance.MechLabViewModel(Guid.NewGuid().ToString());
+            Guid newID = Guid.NewGuid();
+            ViewModel = ViewModelLocator.Instance.MechLabViewModel(newID.ToString());
             ViewModel.LoadMechLab(id);
+            ViewModel.Simulator.ID = newID;
         }
 
         public async Task<bool> CanClose()
