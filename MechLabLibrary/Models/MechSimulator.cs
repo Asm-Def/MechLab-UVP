@@ -51,6 +51,15 @@ namespace MechLabLibrary.Models
         }
 
         /// <summary>
+        /// 删除符合给定ID的物体
+        /// </summary>
+        /// <param name="ID"></param>
+        public void DeleteObject(int ID)
+        {
+            _objects.RemoveAll((o) => o.ID == ID);
+        }
+
+        /// <summary>
         /// 开始进行模拟
         /// </summary>
         public void Start()

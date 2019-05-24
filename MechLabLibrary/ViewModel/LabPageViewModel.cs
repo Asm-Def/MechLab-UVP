@@ -225,6 +225,7 @@ namespace MechLabLibrary.ViewModel
             _deleteObjectCommand ?? (_deleteObjectCommand = new RelayCommand(() =>
             {
                 Debug.WriteLine("Delete");
+                Simulator.DeleteObject(EditingObject.ID);
                 ObjectViewCollection.Remove(EditingObject);
             }));
 
@@ -241,8 +242,8 @@ namespace MechLabLibrary.ViewModel
 
         public RelayCommand StopRunningCommand => _stopRunningCommand ?? (_stopRunningCommand = new RelayCommand(() =>
         {
-            Simulator.Stop();
             IsRunning = false;
+            Simulator.Stop();
         }));
     }
 }
