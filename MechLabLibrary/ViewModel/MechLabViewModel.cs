@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using MechLabLibrary.Models;
 
 namespace MechLabLibrary.ViewModel
@@ -16,6 +17,8 @@ namespace MechLabLibrary.ViewModel
         private int _nextID = 0;
 
         private MechLabServices _mechLabServices;
+
+        private MechLabData _labData;
 
         private MechSimulator _simulator;
 
@@ -92,6 +95,14 @@ namespace MechLabLibrary.ViewModel
             set => Set(nameof(IsEditingObject), ref _isEditingObject, value);
         }
 
+        private bool _isMovingObject;
+
+        public bool IsMovingObject
+        {
+            get => _isMovingObject;
+            set => Set(nameof(IsMovingObject), ref _isMovingObject, value);
+        }
+
         private MechPlanetView _editingObject;
 
         public MechPlanetView EditingObject
@@ -116,6 +127,9 @@ namespace MechLabLibrary.ViewModel
             _mechLabServices = new MechLabServices();
             ObjectViewCollection = new ObservableCollection<MechObjectView>();
             IsRunning = false;
+            IsEditingName = false;
+            IsEditingObject = false;
+            IsMovingObject = false;
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName != nameof(IsSaved)) IsSaved = false;
@@ -130,10 +144,11 @@ namespace MechLabLibrary.ViewModel
                 }, null, 0, 1000 / 40); // 设定刷新频率
 
             Simulator = id == Guid.Empty ? new MechSimulator() : await _mechLabServices.GetSimulator(id);
+            _labData = id == Guid.Empty ? new MechLabData() : _mechLabServices.GetLabData(id);
+            Name = id == Guid.Empty ? "Untitled" : _labData.Name;
             EyeShot = 1;
             X = 0;
             Y = 0;
-            Name = "Untitled";
             foreach (MechObject mechObject in Simulator._objects)
             {
                 if (mechObject.Type == "Planet")
@@ -174,19 +189,32 @@ namespace MechLabLibrary.ViewModel
             MechPlanet mechPlanet = Simulator.AddPlanet(x, y, vx, vy, m, r);
             MechPlanetView result = new MechPlanetView(_nextID++, mechPlanet, this);
             ObjectViewCollection.Add(result);
-            Debug.WriteLine(result.ViewX);
             return result;
+        }
+
+        public void TappedObject(double x, double y)
+        {
+            Debug.WriteLine(x);
+            Debug.WriteLine(y);
+            foreach (var mechObjectView in ObjectViewCollection)
+            {
+                var r= ((MechPlanetView) mechObjectView).ViewR;
+                var xx = (mechObjectView.ViewX - x);
+                var yy = (mechObjectView.ViewY - y);
+                if (xx * xx + yy * yy <= r*r)
+                {
+                    Debug.WriteLine(mechObjectView.ID);
+                    EditingObject = (MechPlanetView)mechObjectView;
+                    IsEditingObject = true;
+                    break;
+                }
+
+            }
         }
 
         public void RefreshView()
         {
-            Debug.WriteLine("Refresh");
-            foreach (var mechObjectView in ObjectViewCollection)
-            {
-                mechObjectView.OnPropertyChanged("ViewX");
-                mechObjectView.OnPropertyChanged("ViewY");
-                mechObjectView.OnPropertyChanged("ViewR");
-            }
+            foreach (var mechObjectView in ObjectViewCollection) mechObjectView.UpdateXYR();
         }
 
 
@@ -205,6 +233,14 @@ namespace MechLabLibrary.ViewModel
         {
             Debug.WriteLine("saved");
             IsEditingName = false;
+            IsEditingObject = false;
+            IsMovingObject = false;
+            EditingObject = null;
+            _labData.Name = Name;
+            _labData.LabID = Simulator.ID;
+            _labData.ModifiedTime=DateTime.Now;
+            _mechLabServices.SaveMechLab(_labData,Simulator._objects);
+            Messenger.Default.Send("UpdateHome",null);
             IsSaved = true;
         }));
 
@@ -213,18 +249,10 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand AddPlanetCommand => _addPlanetCommand ?? (_addPlanetCommand = new RelayCommand(() =>
         {
             Debug.WriteLine("AddPlanet");
-            EditingObject = AddPlanetView();
+            EditingObject = AddPlanetView(X,Y);
             IsEditingObject = true;
-            Debug.WriteLine(ObjectViewCollection.Count);
+            IsMovingObject = true;
         }));
-
-        private RelayCommand _copyObjectCommand;
-
-        public RelayCommand CopyObjectCommand =>
-            _copyObjectCommand ?? (_copyObjectCommand = new RelayCommand(() =>
-            {
-                Debug.WriteLine("Copy");
-            }));
 
         private RelayCommand _deleteObjectCommand;
 
@@ -235,6 +263,8 @@ namespace MechLabLibrary.ViewModel
                 Simulator.DeleteObject(EditingObject.ID);
                 ObjectViewCollection.Remove(EditingObject);
                 IsEditingObject = false;
+                IsMovingObject = false;
+                EditingObject = null;
             }));
 
         private RelayCommand _startRunningCommand;
@@ -242,8 +272,8 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand StartRunningCommand => _startRunningCommand ??
                                                    (_startRunningCommand = new RelayCommand(() =>
                                                    {
-                                                       Simulator.Start();
                                                        IsRunning = true;
+                                                       Simulator.Start();
                                                    }));
 
         private RelayCommand _stopRunningCommand;

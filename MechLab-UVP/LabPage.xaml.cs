@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 using GalaSoft.MvvmLight.Ioc;
 using MechLabLibrary.ViewModel;
 
@@ -28,12 +29,14 @@ namespace MechLab_UVP
     public sealed partial class LabPage : Page
     {
         public MechLabViewModel ViewModel;
+        private Canvas _canvas;
 
         public LabPage(Guid id)
         {
-            this.InitializeComponent();
             ViewModel = ViewModelLocator.Instance.MechLabViewModel(Guid.NewGuid().ToString());
             ViewModel.LoadMechLab(id);
+            this.InitializeComponent();
+            _canvas = this.FindName("MainCanvas") as Canvas;
         }
 
         public async Task<bool> CanClose()
@@ -59,17 +62,41 @@ namespace MechLab_UVP
             if (textBox.Text.Length == 0) textBox.Text = "Untitled";
         }
 
-        private void UIElement_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        private void Canvas_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             if (e.IsInertial) e.Complete();
-            Debug.WriteLine("OnManipulationDelta");
-            ViewModel.X -= e.Delta.Translation.X;
-            ViewModel.Y -= e.Delta.Translation.Y;
-            Debug.WriteLine(ViewModel.X);
-            Debug.WriteLine(ViewModel.Y);
-            ViewModel.RefreshView();
+            if (ViewModel.IsMovingObject)
+            {
+                ViewModel.EditingObject.ViewX += e.Delta.Translation.X;
+                ViewModel.EditingObject.ViewY += e.Delta.Translation.Y;
+                ViewModel.EditingObject.UpdateXYR();
+            }
+            else
+            {
+                ViewModel.X -= e.Delta.Translation.X;
+                ViewModel.Y -= e.Delta.Translation.Y;
+                ViewModel.RefreshView();
+            }
+
+            e.Handled = true;
+        }
+        
+
+        private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ViewModel.IsRunning) return;
+            var x = e.GetPosition(_canvas).X - 320;
+            var y = e.GetPosition(_canvas).Y - 40;
+            ViewModel.TappedObject(x, y);
             e.Handled = true;
         }
 
+        private void TextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
+        {
+            if (!(sender is TextBox textBox)) return;
+            if (textBox.Text.Length > 0) return;
+            if (textBox.Header != null && textBox.Header.Equals("M")) textBox.Text = "1";
+            else textBox.Text = "0.0";
+        }
     }
 }

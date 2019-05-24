@@ -87,25 +87,30 @@
                         Width="80"
                         Header="X"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=TwoWay}"
+                        LosingFocus="TextBox_OnLosingFocus"
                         Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay}" />
                     <TextBox
                         Grid.Column="2"
                         Width="80"
                         Header="Y"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
+                        LosingFocus="TextBox_OnLosingFocus"
                         Text="{x:Bind ViewModel.EditingObject.ViewY, Mode=TwoWay}" />
                     <TextBox
                         Grid.Column="4"
                         Width="80"
                         Header="M"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
+                        LosingFocus="TextBox_OnLosingFocus"
                         Text="{x:Bind ViewModel.EditingObject.M, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center">
                     <TextBox
                         Width="80"
                         Header="Speed"
-                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
+                        LosingFocus="TextBox_OnLosingFocus"
+                        Text="{x:Bind ViewModel.EditingObject.Speed, Mode=TwoWay}" />
                 </Grid>
                 <Grid
                     Grid.Row="2"
@@ -127,7 +132,7 @@
                         TickWidth="4"
                         Unit=""
                         ValueStringFormat=".00"
-                        Value="0" />
+                        Value="{x:Bind ViewModel.EditingObject.SpeedAngle, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,40,0,20">
                     <Grid.ColumnDefinitions>
@@ -137,11 +142,11 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button
+                    <ToggleButton
                         Grid.Column="1"
                         Width="80"
-                        Command="{x:Bind ViewModel.CopyObjectCommand}"
-                        Content="复制"
+                        Content="移动"
+                        IsChecked="{x:Bind ViewModel.IsMovingObject, Mode=TwoWay}"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         Style="{StaticResource ButtonRevealStyle}" />
                     <Button
@@ -170,13 +175,18 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+            <ScrollViewer
+                Grid.Row="0"
+                HorizontalScrollMode="Disabled"
+                VerticalScrollMode="Disabled"
+                ZoomMode="Disabled">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.ObjectViewCollection}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas
+                                x:Name="MainCanvas"
                                 Background="Black"
-                                ManipulationDelta="UIElement_OnManipulationDelta"
+                                ManipulationDelta="Canvas_OnManipulationDelta"
                                 ManipulationMode="TranslateX,TranslateY" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
@@ -192,7 +202,8 @@
                                 Width="{Binding ViewR, Mode=OneWay}"
                                 Height="{Binding ViewR, Mode=OneWay}"
                                 Fill="Red"
-                                StrokeThickness="1">
+                                StrokeThickness="1"
+                                Tapped="UIElement_OnTapped">
                                 <Ellipse.RenderTransform>
                                     <TranslateTransform X="{Binding ViewX, Mode=OneWay}" Y="{Binding ViewY, Mode=OneWay}" />
                                 </Ellipse.RenderTransform>
@@ -200,7 +211,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </Grid>
+            </ScrollViewer>
             <Grid Grid.Row="1" Margin="20,20,20,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MechLabLibrary.Models;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace MechLabLibrary.ViewModel
@@ -56,11 +57,44 @@ namespace MechLabLibrary.ViewModel
             set { _mechObject.M = value; OnPropertyChanged(); }
         }
 
+        public double Speed
+        {
+            get => Math.Sqrt(VX * VX + VY * VY);
+            set { CalculateV(value, SpeedAngle); }
+        }
+
+        public double SpeedAngle
+        {
+            get
+            {
+                var a = (180.0 / Math.PI) * Math.Atan2(VY, VX);
+                Debug.WriteLine(a);
+                if (a < 0) a += 180;
+                a += 90;
+                if (a >= 360) a -= 360;
+                return a;
+            }
+            set
+            {
+                CalculateV(Speed,value);
+            }
+        }
+
+        private void CalculateV(double speed, double angle)
+        {
+            angle -= 90;
+            if (angle < 0) angle += 360;
+            var rad = (Math.PI / 180.0) * angle;
+            Debug.WriteLine(rad);
+            VX = speed * Math.Cos(rad);
+            VY = speed * Math.Sin(rad);
+        }
+
         /// <summary>
         /// 指向它的物理模型
         /// </summary>
         protected MechObject _mechObject;
-        public MechLabViewModel _parent;
+        protected MechLabViewModel _parent;
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
@@ -82,5 +116,12 @@ namespace MechLabLibrary.ViewModel
         /// </summary>
         // TODO: 若不成功，则修改为手动计算ViewX ViewY属性值
         public void Refresh() { if(_parent.IsRunning) OnPropertyChanged(""); }
+
+        public void UpdateXYR()
+        {
+            OnPropertyChanged("ViewX");
+            OnPropertyChanged("ViewY");
+            OnPropertyChanged("ViewR");
+        }
     }
 }

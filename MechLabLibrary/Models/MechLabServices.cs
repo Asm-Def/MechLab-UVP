@@ -46,6 +46,11 @@ namespace MechLabLibrary.Models
         //    return objects;
         //}
 
+        public  MechLabData GetLabData(Guid LabID)
+        {
+            return  _context.Labs.FirstOrDefault(o => o.LabID == LabID);
+        }
+
         /// <summary>
         /// 从数据库中读取编号为LabID的Simulator数据
         /// </summary>

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using MechLabLibrary.Models;
 
 namespace MechLabLibrary.ViewModel
@@ -21,6 +22,11 @@ namespace MechLabLibrary.ViewModel
         {
             _mechLabServices = new MechLabServices();
             GetLabAll();
+            Messenger.Default.Register<object>(this,"UpdateHome", (obj) =>
+            {
+                Debug.WriteLine("Received Message UpdateHome");
+                GetLabAll();
+            });
         }
 
         private async void GetLabAll()
