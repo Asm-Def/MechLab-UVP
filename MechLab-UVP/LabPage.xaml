@@ -94,18 +94,20 @@
                     <TextBox
                         Grid.Column="0"
                         Header="X"
-                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=TwoWay}"
+                        Text="{Binding ViewModel.EditingObject.ViewX}" />
                     <TextBox
                         Grid.Column="2"
                         Header="Y"
-                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
+                        Text="{Binding ViewModel.EditingObject.ViewY, Mode=TwoWay}" />
                     <TextBox
                         Grid.Column="4"
                         Header="M"
-                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center">
-                    <TextBox Header="Speed" IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                    <TextBox Header="Speed" IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
                 </Grid>
                 <Grid
                     Grid.Row="2"
@@ -113,7 +115,7 @@
                     Height="280">
                     <controls:RadialGauge
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        IsInteractive="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        IsInteractive="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         MaxAngle="360"
                         Maximum="360"
                         MinAngle="0"
@@ -142,7 +144,7 @@
                         Width="80"
                         Command="{x:Bind ViewModel.CopyObjectCommand}"
                         Content="复制"
-                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         Style="{StaticResource ButtonRevealStyle}" />
                     <Button
                         Grid.Column="3"
@@ -151,7 +153,7 @@
                         Background="OrangeRed"
                         Command="{x:Bind ViewModel.DeleteObjectCommand}"
                         Content="删除"
-                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         Style="{StaticResource ButtonRevealStyle}" />
                 </Grid>
             </Grid>
@@ -170,7 +172,21 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Background="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Grid Grid.Row="0" Background="{ThemeResource ApplicationForegroundThemeBrush}">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ObjectViewCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding ViewX, Mode=OneWay}" />
+                            <Setter Property="Canvas.Top" Value="{Binding ViewY, Mode=OneWay}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Grid>
             <Grid Grid.Row="1" Margin="20,20,20,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />

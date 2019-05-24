@@ -79,9 +79,17 @@ namespace MechLabLibrary.ViewModel
             set => Set(nameof(EditingName), ref _editingName, value);
         }
 
-        private bool _editingObject;
+        private bool _isEditingObject;
 
-        public bool EditingObject
+        public bool IsEditingObject
+        {
+            get => _isEditingObject;
+            set => Set(nameof(IsEditingObject), ref _isEditingObject, value);
+        }
+
+        private MechObjectView _editingObject;
+
+        public MechObjectView EditingObject
         {
             get => _editingObject;
             set => Set(nameof(EditingObject), ref _editingObject, value);
@@ -212,6 +220,7 @@ namespace MechLabLibrary.ViewModel
             _deleteObjectCommand ?? (_deleteObjectCommand = new RelayCommand(() =>
             {
                 Debug.WriteLine("Delete");
+                ObjectViewCollection.Remove(EditingObject);
             }));
 
         private RelayCommand _startRunningCommand;
@@ -219,7 +228,7 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand StartRunningCommand => _startRunningCommand ??
                                                    (_startRunningCommand = new RelayCommand(() =>
                                                    {
-                                                       Debug.WriteLine("StartRunning");
+                                                       Simulator.Start();
                                                        IsRunning = true;
                                                    }));
 
@@ -227,7 +236,7 @@ namespace MechLabLibrary.ViewModel
 
         public RelayCommand StopRunningCommand => _stopRunningCommand ?? (_stopRunningCommand = new RelayCommand(() =>
         {
-            Debug.WriteLine("StopRunning");
+            Simulator.Stop();
             IsRunning = false;
         }));
     }
