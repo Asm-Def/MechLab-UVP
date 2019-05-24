@@ -11,7 +11,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="320" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="20,40,20,20">
@@ -27,25 +27,23 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Grid Width="200" VerticalAlignment="Center">
+                <Grid Width="232" VerticalAlignment="Center">
                     <TextBlock
                         Margin="0,0,-48,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="20"
                         Text="{x:Bind ViewModel.Name, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.EditingName, Converter={StaticResource FalseToVisibleConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.IsEditingName, Converter={StaticResource FalseToVisibleConverter}, Mode=OneWay}" />
                     <TextBox
-                        x:Name="EditingNameTextBox"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         LosingFocus="EditingNameTextBox_OnLosingFocus"
                         Text="{x:Bind ViewModel.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                        Visibility="{x:Bind ViewModel.EditingName, Converter={StaticResource TrueToVisibleConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.IsEditingName, Converter={StaticResource TrueToVisibleConverter}, Mode=OneWay}" />
                 </Grid>
                 <Button
-                    x:Name="ToggleEditingNameButton"
                     Width="48"
                     Margin="-1,0,0,0"
                     Background="Transparent"
@@ -57,19 +55,12 @@
                     </Viewbox>
                 </Button>
             </StackPanel>
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="3" HorizontalAlignment="Center">
                 <Button
                     Command="{x:Bind ViewModel.AddPlanetCommand}"
                     IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
                     Style="{StaticResource ButtonRevealStyle}">
                     添加星球
-                </Button>
-                <Button
-                    HorizontalAlignment="Right"
-                    Command="{x:Bind ViewModel.AddObjectCommand}"
-                    IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource ButtonRevealStyle}">
-                    添加物体
                 </Button>
             </Grid>
             <Grid
@@ -93,21 +84,28 @@
                     </Grid.ColumnDefinitions>
                     <TextBox
                         Grid.Column="0"
+                        Width="80"
                         Header="X"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=TwoWay}"
-                        Text="{Binding ViewModel.EditingObject.ViewX}" />
+                        Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay}" />
                     <TextBox
                         Grid.Column="2"
+                        Width="80"
                         Header="Y"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
-                        Text="{Binding ViewModel.EditingObject.ViewY, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.ViewY, Mode=TwoWay}" />
                     <TextBox
                         Grid.Column="4"
+                        Width="80"
                         Header="M"
-                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
+                        Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center">
-                    <TextBox Header="Speed" IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
+                    <TextBox
+                        Width="80"
+                        Header="Speed"
+                        IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}" />
                 </Grid>
                 <Grid
                     Grid.Row="2"
@@ -176,7 +174,7 @@
                 <ItemsControl ItemsSource="{x:Bind ViewModel.ObjectViewCollection}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas />
+                            <Canvas Background="SkyBlue" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
@@ -185,6 +183,20 @@
                             <Setter Property="Canvas.Top" Value="{Binding ViewY, Mode=OneWay}" />
                         </Style>
                     </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse
+                                Width="40"
+                                Height="40"
+                                Fill="Red"
+                                Stroke="Red"
+                                StrokeThickness="1">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform X="{Binding ViewX}" Y="{Binding ViewY}" />
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
             <Grid Grid.Row="1" Margin="20,20,20,20">

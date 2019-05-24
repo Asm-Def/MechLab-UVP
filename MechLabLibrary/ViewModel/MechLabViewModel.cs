@@ -76,12 +76,12 @@ namespace MechLabLibrary.ViewModel
 
         private Timer _timer;
 
-        private bool _editingName;
+        private bool _isEditingName;
 
-        public bool EditingName
+        public bool IsEditingName
         {
-            get => _editingName;
-            set => Set(nameof(EditingName), ref _editingName, value);
+            get => _isEditingName;
+            set => Set(nameof(IsEditingName), ref _isEditingName, value);
         }
 
         private bool _isEditingObject;
@@ -92,9 +92,9 @@ namespace MechLabLibrary.ViewModel
             set => Set(nameof(IsEditingObject), ref _isEditingObject, value);
         }
 
-        private MechObjectView _editingObject;
+        private MechPlanetView _editingObject;
 
-        public MechObjectView EditingObject
+        public MechPlanetView EditingObject
         {
             get => _editingObject;
             set => Set(nameof(EditingObject), ref _editingObject, value);
@@ -116,7 +116,6 @@ namespace MechLabLibrary.ViewModel
             _mechLabServices = new MechLabServices();
             ObjectViewCollection = new ObservableCollection<MechObjectView>();
             IsRunning = false;
-            EyeShot = 1;
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName != nameof(IsSaved)) IsSaved = false;
@@ -170,7 +169,7 @@ namespace MechLabLibrary.ViewModel
         /// </summary>
         /// <returns></returns>
         public MechPlanetView AddPlanetView(double x = 0, double y = 0, double vx = 0, double vy = 0, double m = 1,
-            double r = 0)
+            double r = 10)
         {
             MechPlanet mechPlanet = Simulator.AddPlanet(x, y, vx, vy, m, r);
             MechPlanetView result = new MechPlanetView(_nextID++, mechPlanet, this);
@@ -185,7 +184,7 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand ToggleEditingName => _toggleEditingName ?? (_toggleEditingName =
                                                      new RelayCommand(() =>
                                                      {
-                                                         EditingName = !EditingName;
+                                                         IsEditingName = !IsEditingName;
                                                      }));
 
         private RelayCommand _saveCommand;
@@ -193,7 +192,7 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand SaveCommand => _saveCommand ?? (_saveCommand = new RelayCommand(() =>
         {
             Debug.WriteLine("saved");
-            EditingName = false;
+            IsEditingName = false;
             IsSaved = true;
         }));
 
@@ -202,13 +201,12 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand AddPlanetCommand => _addPlanetCommand ?? (_addPlanetCommand = new RelayCommand(() =>
         {
             Debug.WriteLine("AddPlanet");
-        }));
-
-        private RelayCommand _addObjectCommand;
-
-        public RelayCommand AddObjectCommand => _addObjectCommand ?? (_addObjectCommand = new RelayCommand(() =>
-        {
-            Debug.WriteLine("AddObject");
+            Debug.WriteLine(EyeShot);
+            EditingObject=AddPlanetView();
+            IsEditingObject = true;
+            Debug.WriteLine(ObjectViewCollection.Count);
+            RaisePropertyChanged(nameof(EditingObject));
+            Debug.WriteLine(EditingObject.ViewR);
         }));
 
         private RelayCommand _copyObjectCommand;
