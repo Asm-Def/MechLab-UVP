@@ -12,7 +12,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using MechLabLibrary.ViewModel;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -32,7 +35,7 @@ namespace MechLab_UVP
 
         private void LabInfoGridView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-
+            Messenger.Default.Send<object>("OpenTab",e.ClickedItem);
         }
     }
 }

@@ -11,11 +11,11 @@ namespace MechLab_UVP
         {
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<LabInfoViewModel>();
-            SimpleIoc.Default.Register<LabPageViewModel>();
+            SimpleIoc.Default.Register<MechLabViewModel>();
         }
 
         public MainPageViewModel MainPageViewModel => SimpleIoc.Default.GetInstance<MainPageViewModel>();
         public LabInfoViewModel LabInfoViewModel => SimpleIoc.Default.GetInstance<LabInfoViewModel>();
-        public LabPageViewModel LabPageViewModel(string key) => SimpleIoc.Default.GetInstance<LabPageViewModel>(key);
+        public MechLabViewModel MechLabViewModel(string key) => SimpleIoc.Default.GetInstance<MechLabViewModel>(key);
     }
 }

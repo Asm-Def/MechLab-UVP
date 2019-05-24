@@ -10,7 +10,8 @@ namespace MechLabLibrary.Models {
         public DbSet<MechObjectData> Objects { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=labs.db");
+            //optionsBuilder.UseSqlite("Data Source=labs.db");
+            optionsBuilder.UseInMemoryDatabase("labs");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

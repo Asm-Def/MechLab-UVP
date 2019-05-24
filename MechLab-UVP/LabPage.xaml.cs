@@ -25,14 +25,13 @@ namespace MechLab_UVP
     /// </summary>
     public sealed partial class LabPage : Page
     {
-        public LabPageViewModel ViewModel;
+        public MechLabViewModel ViewModel;
 
         public LabPage(Guid id)
         {
             this.InitializeComponent();
-            ViewModel = ViewModelLocator.Instance.LabPageViewModel(Guid.NewGuid().ToString());
-            if (id != Guid.Empty) ViewModel.LoadMechLab(id);
-            else ViewModel.NewMechLab();
+            ViewModel = ViewModelLocator.Instance.MechLabViewModel(Guid.NewGuid().ToString());
+            ViewModel.LoadMechLab(id);
         }
 
         public async Task<bool> CanClose()
@@ -50,6 +49,12 @@ namespace MechLab_UVP
             if (result == ContentDialogResult.Primary) ViewModel.SaveCommand.Execute(null);
             SimpleIoc.Default.Unregister(ViewModel);
             return true;
+        }
+
+        private void EditingNameTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
+        {
+            if (!(sender is TextBox textBox)) return;
+            if (textBox.Text.Length == 0) textBox.Text = "Untitled";
         }
     }
 }

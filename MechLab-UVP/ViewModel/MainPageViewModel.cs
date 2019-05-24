@@ -48,7 +48,7 @@ namespace MechLabLibrary.ViewModel
             Messenger.Default.Register<object>(this, "OpenTab", (obj) =>
             {
                 if (!(obj is MechLabData data)) return;
-                if (TabViewItems.FirstOrDefault(e => ((e.Content as LabPage)?.ViewModel.LabId == data.LabID)) is TabViewItem
+                if (TabViewItems.FirstOrDefault(e => ((e.Content as LabPage)?.ViewModel.Simulator.ID == data.LabID)) is TabViewItem
                     tab) CurrentTab = tab;
                 else OpenTab.Execute(data.LabID);
             });

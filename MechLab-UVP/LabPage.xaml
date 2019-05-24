@@ -6,8 +6,215 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:MechLab_UVP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}"
     mc:Ignorable="d">
 
-    <Grid />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="20,40,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Grid Width="200" VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="0,0,-48,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Text="{x:Bind ViewModel.Name, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.EditingName, Converter={StaticResource FalseToVisibleConverter}, Mode=OneWay}" />
+                    <TextBox
+                        x:Name="EditingNameTextBox"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        LosingFocus="EditingNameTextBox_OnLosingFocus"
+                        Text="{x:Bind ViewModel.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Visibility="{x:Bind ViewModel.EditingName, Converter={StaticResource TrueToVisibleConverter}, Mode=OneWay}" />
+                </Grid>
+                <Button
+                    x:Name="ToggleEditingNameButton"
+                    Width="48"
+                    Margin="-1,0,0,0"
+                    Background="Transparent"
+                    BorderThickness="1"
+                    Command="{x:Bind ViewModel.ToggleEditingName}"
+                    IsEnabled="{x:Bind ViewModel.Name, Converter={StaticResource StringToBoolConverter}, Mode=OneWay}">
+                    <Viewbox MaxWidth="16" MaxHeight="16">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE70F;" />
+                    </Viewbox>
+                </Button>
+            </StackPanel>
+            <Grid Grid.Row="3">
+                <Button
+                    Command="{x:Bind ViewModel.AddPlanetCommand}"
+                    IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource ButtonRevealStyle}">
+                    添加星球
+                </Button>
+                <Button
+                    HorizontalAlignment="Right"
+                    Command="{x:Bind ViewModel.AddObjectCommand}"
+                    IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource ButtonRevealStyle}">
+                    添加物体
+                </Button>
+            </Grid>
+            <Grid
+                Grid.Row="5"
+                Padding="8"
+                BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                BorderThickness="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0,20,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        Header="X"
+                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                    <TextBox
+                        Grid.Column="2"
+                        Header="Y"
+                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                    <TextBox
+                        Grid.Column="4"
+                        Header="M"
+                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                </Grid>
+                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                    <TextBox Header="Speed" IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}" />
+                </Grid>
+                <Grid
+                    Grid.Row="2"
+                    Width="200"
+                    Height="280">
+                    <controls:RadialGauge
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        IsInteractive="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        MaxAngle="360"
+                        Maximum="360"
+                        MinAngle="0"
+                        Minimum="0"
+                        NeedleLength="120"
+                        NeedleWidth="2"
+                        ScaleWidth="0"
+                        StepSize="0.01"
+                        TickLength="10"
+                        TickSpacing="90"
+                        TickWidth="4"
+                        Unit=""
+                        ValueStringFormat=".00"
+                        Value="0" />
+                </Grid>
+                <Grid Grid.Row="3" Margin="0,40,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Column="1"
+                        Width="80"
+                        Command="{x:Bind ViewModel.CopyObjectCommand}"
+                        Content="复制"
+                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        Style="{StaticResource ButtonRevealStyle}" />
+                    <Button
+                        Grid.Column="3"
+                        Width="80"
+                        HorizontalAlignment="Right"
+                        Background="OrangeRed"
+                        Command="{x:Bind ViewModel.DeleteObjectCommand}"
+                        Content="删除"
+                        IsEnabled="{x:Bind ViewModel.EditingObject, Mode=OneWay}"
+                        Style="{StaticResource ButtonRevealStyle}" />
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="7" HorizontalAlignment="Center">
+                <Button
+                    Width="160"
+                    Height="40"
+                    Command="{x:Bind ViewModel.SaveCommand}"
+                    Content="保存"
+                    IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource ButtonRevealStyle}" />
+            </Grid>
+        </Grid>
+        <Grid Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Background="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Grid Grid.Row="1" Margin="20,20,20,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Viewbox>
+                        <TextBlock
+                            Height="22"
+                            Margin="0,0,5,0"
+                            Padding="3"
+                            HorizontalTextAlignment="Center"
+                            Text="Zoom"
+                            TextWrapping="Wrap" />
+                    </Viewbox>
+                    <Slider
+                        Width="200"
+                        Maximum="1.5"
+                        Minimum="0.5"
+                        StepFrequency="0.1"
+                        TickFrequency="0.5"
+                        TickPlacement="Outside"
+                        Value="{x:Bind ViewModel.EyeShot, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button
+                        Width="80"
+                        Margin="0,0,20,0"
+                        Command="{x:Bind ViewModel.StartRunningCommand}"
+                        Content="Start"
+                        IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
+                        Style="{StaticResource ButtonRevealStyle}" />
+                    <Button
+                        Width="80"
+                        Margin="20,0,0,0"
+                        Command="{x:Bind ViewModel.StopRunningCommand}"
+                        Content="Stop"
+                        IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay}"
+                        Style="{StaticResource ButtonRevealStyle}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
 </Page>
