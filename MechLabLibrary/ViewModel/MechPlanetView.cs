@@ -13,7 +13,7 @@ namespace MechLabLibrary.ViewModel
         public double ViewR
         {
             get { return ((MechPlanet)_mechObject).R / _parent.EyeShot; }
-            set { ((MechPlanet)_mechObject).R = ViewR * _parent.EyeShot; }
+            set { ((MechPlanet)_mechObject).R = value * _parent.EyeShot; }
         }
     }
 }

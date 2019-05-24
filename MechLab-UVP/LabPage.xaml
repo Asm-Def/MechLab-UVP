@@ -99,7 +99,7 @@
                         Width="80"
                         Header="M"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
-                        Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.M, Mode=TwoWay}" />
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center">
                     <TextBox
@@ -170,11 +170,14 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Background="{ThemeResource ApplicationForegroundThemeBrush}">
+            <Grid Grid.Row="0">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.ObjectViewCollection}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Background="SkyBlue" />
+                            <Canvas
+                                Background="Black"
+                                ManipulationDelta="UIElement_OnManipulationDelta"
+                                ManipulationMode="TranslateX,TranslateY" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
@@ -186,13 +189,12 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Ellipse
-                                Width="40"
-                                Height="40"
+                                Width="{Binding ViewR, Mode=OneWay}"
+                                Height="{Binding ViewR, Mode=OneWay}"
                                 Fill="Red"
-                                Stroke="Red"
                                 StrokeThickness="1">
                                 <Ellipse.RenderTransform>
-                                    <TranslateTransform X="{Binding ViewX}" Y="{Binding ViewY}" />
+                                    <TranslateTransform X="{Binding ViewX, Mode=OneWay}" Y="{Binding ViewY, Mode=OneWay}" />
                                 </Ellipse.RenderTransform>
                             </Ellipse>
                         </DataTemplate>

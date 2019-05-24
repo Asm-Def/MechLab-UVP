@@ -47,7 +47,7 @@ namespace MechLabLibrary.ViewModel
         public double EyeShot
         {
             get => _eyeShot;
-            set => Set(nameof(EyeShot), ref _eyeShot, value);
+            set { Set(nameof(EyeShot), ref _eyeShot, value); RefreshView();}
         }
 
         private double _x;
@@ -174,7 +174,19 @@ namespace MechLabLibrary.ViewModel
             MechPlanet mechPlanet = Simulator.AddPlanet(x, y, vx, vy, m, r);
             MechPlanetView result = new MechPlanetView(_nextID++, mechPlanet, this);
             ObjectViewCollection.Add(result);
+            Debug.WriteLine(result.ViewX);
             return result;
+        }
+
+        public void RefreshView()
+        {
+            Debug.WriteLine("Refresh");
+            foreach (var mechObjectView in ObjectViewCollection)
+            {
+                mechObjectView.OnPropertyChanged("ViewX");
+                mechObjectView.OnPropertyChanged("ViewY");
+                mechObjectView.OnPropertyChanged("ViewR");
+            }
         }
 
 
@@ -201,12 +213,9 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand AddPlanetCommand => _addPlanetCommand ?? (_addPlanetCommand = new RelayCommand(() =>
         {
             Debug.WriteLine("AddPlanet");
-            Debug.WriteLine(EyeShot);
-            EditingObject=AddPlanetView();
+            EditingObject = AddPlanetView();
             IsEditingObject = true;
             Debug.WriteLine(ObjectViewCollection.Count);
-            RaisePropertyChanged(nameof(EditingObject));
-            Debug.WriteLine(EditingObject.ViewR);
         }));
 
         private RelayCommand _copyObjectCommand;
@@ -225,6 +234,7 @@ namespace MechLabLibrary.ViewModel
                 Debug.WriteLine("Delete");
                 Simulator.DeleteObject(EditingObject.ID);
                 ObjectViewCollection.Remove(EditingObject);
+                IsEditingObject = false;
             }));
 
         private RelayCommand _startRunningCommand;

@@ -21,7 +21,11 @@ namespace MechLabLibrary.ViewModel
         public double ViewX
         {
             get { return (_mechObject.X - _parent.X) / _parent.EyeShot; }
-            set { _mechObject.X = (ViewX * _parent.EyeShot) + _parent.X; }
+            set
+            {
+                _mechObject.X = (value * _parent.EyeShot) + _parent.X;
+                if (_parent.EditingObject == this) OnPropertyChanged("ViewX");
+            }
         }
         /// <summary>
         /// 在Canvas模型中的Y坐标
@@ -29,32 +33,34 @@ namespace MechLabLibrary.ViewModel
         public double ViewY
         {
             get { return (_mechObject.Y - _parent.Y) / _parent.EyeShot; }
-            set { _mechObject.Y = (ViewY * _parent.EyeShot) + _parent.Y; }
+            set { _mechObject.Y = (value * _parent.EyeShot) + _parent.Y;
+                if (_parent.EditingObject == this) OnPropertyChanged("ViewY");
+            }
         }
 
         public double VX
         {
             get => _mechObject.VX;
-            set { _mechObject.VX = VX; OnPropertyChanged(); }
+            set { _mechObject.VX = value; OnPropertyChanged(); }
         }
 
         public double VY
         {
             get => _mechObject.VY;
-            set { _mechObject.VY = VY; OnPropertyChanged(); }
+            set { _mechObject.VY = value; OnPropertyChanged(); }
         }
 
         public double M
         {
             get => _mechObject.M;
-            set { _mechObject.M = M; OnPropertyChanged(); }
+            set { _mechObject.M = value; OnPropertyChanged(); }
         }
 
         /// <summary>
         /// 指向它的物理模型
         /// </summary>
         protected MechObject _mechObject;
-        protected MechLabViewModel _parent;
+        public MechLabViewModel _parent;
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 

@@ -58,10 +58,10 @@ namespace MechLabLibrary.Models
         /// 物体编号
         /// </summary>
         readonly public int ID;
-        public double X { get { return Location.X; } set { Location.X = X; } }
-        public double Y { get { return Location.Y; } set { Location.Y = Y; } }
-        public double VX { get { return Velocity.X; } set { Velocity.X = X; } }
-        public double VY { get { return Velocity.Y; } set { Velocity.Y = Y; } }
+        public double X { get { return Location.X; } set { Location.X = value; } }
+        public double Y { get { return Location.Y; } set { Location.Y = value; } }
+        public double VX { get { return Velocity.X; } set { Velocity.X = value; } }
+        public double VY { get { return Velocity.Y; } set { Velocity.Y = value; } }
         public double M { get; set; }
         public Timer _timer { get; set; }
         DateTime _lastTime { get; set; }

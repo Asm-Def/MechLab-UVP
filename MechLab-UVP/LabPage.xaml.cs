@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -56,6 +57,18 @@ namespace MechLab_UVP
         {
             if (!(sender is TextBox textBox)) return;
             if (textBox.Text.Length == 0) textBox.Text = "Untitled";
+        }
+
+        private void UIElement_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.IsInertial) e.Complete();
+            Debug.WriteLine("OnManipulationDelta");
+            ViewModel.X -= e.Delta.Translation.X;
+            ViewModel.Y -= e.Delta.Translation.Y;
+            Debug.WriteLine(ViewModel.X);
+            Debug.WriteLine(ViewModel.Y);
+            ViewModel.RefreshView();
+            e.Handled = true;
         }
 
     }
