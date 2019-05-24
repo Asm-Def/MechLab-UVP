@@ -10,6 +10,11 @@ namespace MechLabLibrary.ViewModel
 {
     public class MechLabViewModel : ViewModelBase
     {
+        /// <summary>
+        /// 下一个新增的Object的ID
+        /// </summary>
+        private int _nextID = 0;
+
         private MechLabServices _mechLabServices;
 
         private MechSimulator _simulator;
@@ -135,12 +140,12 @@ namespace MechLabLibrary.ViewModel
                 if (mechObject.Type == "Planet")
                 {
                     MechPlanetView planetView =
-                        new MechPlanetView(ObjectViewCollection.Count, (MechPlanet) mechObject, this);
+                        new MechPlanetView(_nextID++, (MechPlanet) mechObject, this);
                     ObjectViewCollection.Add(planetView);
                 }
                 else
                 {
-                    MechObjectView objectView = new MechObjectView(ObjectViewCollection.Count, mechObject, this);
+                    MechObjectView objectView = new MechObjectView(_nextID++, mechObject, this);
                     ObjectViewCollection.Add(objectView);
                 }
             }
@@ -155,7 +160,7 @@ namespace MechLabLibrary.ViewModel
         public MechObjectView AddObjectView(double x = 0, double y = 0, double vx = 0, double vy = 0, double m = 1)
         {
             MechObject mechObject = Simulator.AddObject(x, y, vx, vy, m);
-            MechObjectView result = new MechObjectView(ObjectViewCollection.Count, mechObject, this);
+            MechObjectView result = new MechObjectView(_nextID++, mechObject, this);
             ObjectViewCollection.Add(result);
             return result;
         }
@@ -168,7 +173,7 @@ namespace MechLabLibrary.ViewModel
             double r = 0)
         {
             MechPlanet mechPlanet = Simulator.AddPlanet(x, y, vx, vy, m, r);
-            MechPlanetView result = new MechPlanetView(ObjectViewCollection.Count, mechPlanet, this);
+            MechPlanetView result = new MechPlanetView(_nextID++, mechPlanet, this);
             ObjectViewCollection.Add(result);
             return result;
         }

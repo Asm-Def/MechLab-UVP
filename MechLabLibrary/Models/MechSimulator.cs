@@ -6,6 +6,11 @@ namespace MechLabLibrary.Models
 {
     public class MechSimulator
     {
+        /// <summary>
+        /// 下一个新增的Object的ID
+        /// </summary>
+        private int _nextID = 0;
+
         public List<MechObject> _objects = new List<MechObject>();
 
         /// <summary>
@@ -18,7 +23,7 @@ namespace MechLabLibrary.Models
         /// </summary>
         public MechObject AddObject(double x = 0,double y = 0, double vx = 0, double vy = 0, double m = 1)
         {
-            MechObject result = new MechObject(_objects.Count, x, y, vx, vy, m, this);
+            MechObject result = new MechObject(_nextID++, x, y, vx, vy, m, this);
             _objects.Add(result);
             return result;
         }
@@ -40,7 +45,7 @@ namespace MechLabLibrary.Models
 
         public MechPlanet AddPlanet(double x = 0, double y = 0, double vx = 0, double vy = 0, double m = 1, double r = 0)
         {
-            MechPlanet result = new MechPlanet(_objects.Count, x, y, vx, vy, m, r, this);
+            MechPlanet result = new MechPlanet(_nextID++, x, y, vx, vy, m, r, this);
             _objects.Add(result);
             return result;
         }
