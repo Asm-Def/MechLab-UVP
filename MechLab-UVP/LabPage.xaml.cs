@@ -8,15 +8,18 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using MechLabLibrary.ViewModel;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -33,10 +36,41 @@ namespace MechLab_UVP
 
         public LabPage(Guid id)
         {
-            ViewModel = ViewModelLocator.Instance.MechLabViewModel(Guid.NewGuid().ToString());
-            ViewModel.LoadMechLab(id);
+            var isNew = false;
+            if (id == Guid.Empty)
+            {
+                isNew = true;
+                id = Guid.NewGuid();
+            }
+            ViewModel = ViewModelLocator.Instance.MechLabViewModel(id.ToString());
+            ViewModel.LoadMechLab(id, isNew);
             this.InitializeComponent();
-            _canvas = this.FindName("MainCanvas") as Canvas;
+            Messenger.Default.Register<object>(this,id, (obj) =>
+            {
+                Debug.WriteLine("Received RenderCanvas");
+                RenderCanvas();
+            });
+        }
+
+        public async void RenderCanvas()
+        {
+            try
+            {
+                if (_canvas == null) return;
+                RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap();
+                Debug.WriteLine(_canvas.ActualWidth);
+                Debug.WriteLine(_canvas.ActualHeight);
+                if (_canvas.ActualWidth <= 0 || _canvas.ActualHeight <= 0) return;
+                await renderTargetBitmap.RenderAsync(_canvas);
+                byte[] bytes = (await renderTargetBitmap.GetPixelsAsync()).ToArray();
+                Debug.WriteLine(bytes.Length);
+                ViewModel.SaveLabAsync(bytes);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("RenderCanvas failed");
+                Debug.WriteLine(e.Message);
+            }
         }
 
         public async Task<bool> CanClose()
@@ -53,6 +87,7 @@ namespace MechLab_UVP
             if (result == ContentDialogResult.None) return false;
             if (result == ContentDialogResult.Primary) ViewModel.SaveCommand.Execute(null);
             SimpleIoc.Default.Unregister(ViewModel);
+            Messenger.Default.Unregister(this);
             return true;
         }
 
@@ -85,8 +120,8 @@ namespace MechLab_UVP
         private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (ViewModel.IsRunning) return;
-            var x = e.GetPosition(_canvas).X - 320;
-            var y = e.GetPosition(_canvas).Y - 40;
+            var x = e.GetPosition(_canvas).X;
+            var y = e.GetPosition(_canvas).Y;
             ViewModel.TappedObject(x, y);
             e.Handled = true;
         }
@@ -97,6 +132,11 @@ namespace MechLab_UVP
             if (textBox.Text.Length > 0) return;
             if (textBox.Header != null && textBox.Header.Equals("M")) textBox.Text = "1";
             else textBox.Text = "0.0";
+        }
+
+        private void MainCanvas_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _canvas = sender as Canvas;
         }
     }
 }

@@ -136,16 +136,16 @@ namespace MechLabLibrary.ViewModel
             };
         }
 
-        public async void LoadMechLab(Guid id)
+        public async void LoadMechLab(Guid id,bool isNew)
         {
             _timer = new Timer((s) =>
                 {
                     foreach (var obj in ObjectViewCollection) obj.Refresh();
                 }, null, 0, 1000 / 40); // 设定刷新频率
 
-            Simulator = id == Guid.Empty ? new MechSimulator() : await _mechLabServices.GetSimulator(id);
-            _labData = id == Guid.Empty ? new MechLabData() : _mechLabServices.GetLabData(id);
-            Name = id == Guid.Empty ? "Untitled" : _labData.Name;
+            Simulator = isNew ? new MechSimulator(id) : await _mechLabServices.GetSimulator(id);
+            _labData = isNew ? new MechLabData() : _mechLabServices.GetLabData(id);
+            Name = isNew ? "Untitled" : _labData.Name;
             EyeShot = 1;
             X = 0;
             Y = 0;
@@ -218,14 +218,21 @@ namespace MechLabLibrary.ViewModel
             foreach (var mechObjectView in ObjectViewCollection) mechObjectView.UpdateXYR();
         }
 
-        public async void SaveLabAsync()
+        public async void SaveLabAsync(byte[] bytes=null)
         {
             _labData.Name = Name;
             _labData.LabID = Simulator.ID;
             _labData.ModifiedTime = DateTime.Now;
+            _labData.Image = bytes;
             await _mechLabServices.SaveMechLab(_labData, Simulator._objects);
             Debug.WriteLine(_labData.Name);
             Debug.WriteLine(_labData.ModifiedTime);
+            if (bytes != null)
+            {
+                Debug.WriteLine("Bytes not null");
+                Debug.WriteLine(_labData.Image.Length);
+            }
+
             Messenger.Default.Send<string>("", "UpdateHome");
         }
 
@@ -248,6 +255,7 @@ namespace MechLabLibrary.ViewModel
             IsMovingObject = false;
             EditingObject = null;
             SaveLabAsync();
+            Messenger.Default.Send<object>(null, Simulator.ID);
             IsSaved = true;
         }));
 

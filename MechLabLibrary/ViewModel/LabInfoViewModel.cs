@@ -29,9 +29,9 @@ namespace MechLabLibrary.ViewModel
             });
         }
 
-        private async void GetLabAll()
+        private void GetLabAll()
         {
-            var labs = await _mechLabServices.GetMechLabs();
+            var labs = _mechLabServices.GetMechLabs().Result;
             labs.ForEach((e) =>
             {
                 Debug.WriteLine(e.LabID);

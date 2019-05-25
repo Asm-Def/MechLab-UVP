@@ -187,6 +187,7 @@
                                 x:Name="MainCanvas"
                                 Background="Black"
                                 ManipulationDelta="Canvas_OnManipulationDelta"
+                                Loaded="MainCanvas_OnLoaded"
                                 ManipulationMode="TranslateX,TranslateY" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
