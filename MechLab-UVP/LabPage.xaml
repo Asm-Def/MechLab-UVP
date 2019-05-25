@@ -88,21 +88,21 @@
                         Header="X"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=TwoWay}"
                         LosingFocus="TextBox_OnLosingFocus"
-                        Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.ViewX, Mode=TwoWay, FallbackValue=''}" />
                     <TextBox
                         Grid.Column="2"
                         Width="80"
                         Header="Y"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         LosingFocus="TextBox_OnLosingFocus"
-                        Text="{x:Bind ViewModel.EditingObject.ViewY, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.ViewY, Mode=TwoWay, FallbackValue=''}" />
                     <TextBox
                         Grid.Column="4"
                         Width="80"
                         Header="M"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         LosingFocus="TextBox_OnLosingFocus"
-                        Text="{x:Bind ViewModel.EditingObject.M, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.M, Mode=TwoWay, FallbackValue=''}" />
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center">
                     <TextBox
@@ -110,7 +110,7 @@
                         Header="Speed"
                         IsEnabled="{x:Bind ViewModel.IsEditingObject, Mode=OneWay}"
                         LosingFocus="TextBox_OnLosingFocus"
-                        Text="{x:Bind ViewModel.EditingObject.Speed, Mode=TwoWay}" />
+                        Text="{x:Bind ViewModel.EditingObject.Speed, Mode=TwoWay, FallbackValue=''}" />
                 </Grid>
                 <Grid
                     Grid.Row="2"
@@ -132,7 +132,7 @@
                         TickWidth="4"
                         Unit=""
                         ValueStringFormat=".00"
-                        Value="{x:Bind ViewModel.EditingObject.SpeedAngle, Mode=TwoWay}" />
+                        Value="{x:Bind ViewModel.EditingObject.SpeedAngle, Mode=TwoWay, FallbackValue=0}" />
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,40,0,20">
                     <Grid.ColumnDefinitions>
