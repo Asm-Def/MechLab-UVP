@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -93,6 +94,7 @@ namespace MechLabLibrary.Models
             }
             if(MechLabExists(mechLabData.LabID))
             {
+                Debug.WriteLine(mechLabData.LabID);
                 _context.Labs.Update(mechLabData);
                 _context.Objects.RemoveRange(_context.Objects.Where<MechObjectData>(e => e.LabID == LabID));
             }

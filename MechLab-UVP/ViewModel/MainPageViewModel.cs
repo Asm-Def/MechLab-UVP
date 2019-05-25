@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
@@ -47,6 +48,7 @@ namespace MechLabLibrary.ViewModel
             };
             Messenger.Default.Register<object>(this, "OpenTab", (obj) =>
             {
+                Debug.WriteLine("Received AddTab");
                 if (!(obj is MechLabData data)) return;
                 if (TabViewItems.FirstOrDefault(e => ((e.Content as LabPage)?.ViewModel.Simulator.ID == data.LabID)) is TabViewItem
                     tab) CurrentTab = tab;

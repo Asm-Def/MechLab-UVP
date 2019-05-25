@@ -35,7 +35,7 @@ namespace MechLab_UVP
 
         private void LabInfoGridView_OnItemClick(object sender, ItemClickEventArgs e)
         {
-            Messenger.Default.Send<object>("OpenTab",e.ClickedItem);
+            Messenger.Default.Send<object>(e.ClickedItem,"OpenTab");
         }
     }
 }

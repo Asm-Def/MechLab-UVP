@@ -32,6 +32,12 @@ namespace MechLabLibrary.ViewModel
         private async void GetLabAll()
         {
             var labs = await _mechLabServices.GetMechLabs();
+            labs.ForEach((e) =>
+            {
+                Debug.WriteLine(e.LabID);
+                Debug.WriteLine(e.Name);
+                Debug.WriteLine(e.ModifiedTime);
+            });
             Debug.WriteLine(labs.Count);
             MechLabDataCollection = new ObservableCollection<MechLabData>(labs);
         }

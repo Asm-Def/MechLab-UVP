@@ -11,6 +11,7 @@ namespace MechLab_UVP.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             byte[] imageBytes = (byte[]) value;
+            if (imageBytes==null) return new BitmapImage();
             return ConvertByteToImage(imageBytes).Result;
         }
 
