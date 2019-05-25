@@ -241,7 +241,7 @@ namespace MechLabLibrary.ViewModel
             _labData.LabID = Simulator.ID;
             _labData.ModifiedTime=DateTime.Now;
             _mechLabServices.SaveMechLab(_labData,Simulator._objects);
-            Messenger.Default.Send<object>("UpdateHome",null);
+            Messenger.Default.Send<string>("", "UpdateHome");
             IsSaved = true;
         }));
 
