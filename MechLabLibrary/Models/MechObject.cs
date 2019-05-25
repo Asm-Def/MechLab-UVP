@@ -83,10 +83,10 @@ namespace MechLabLibrary.Models
         }
 
         public MechSimulator _parent { get; set; }
-
-        public MechObject(int ID) { M = 1; }
+        
         public MechObject(int ID, double x, double y, double vx, double vy, double m, MechSimulator p = null)
         {
+            this.ID = ID;
             Location = new Vector(x, y);
             Velocity = new Vector(vx, vy);
             _timer = new Timer(new TimerCallback(Simulate));
