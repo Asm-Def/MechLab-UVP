@@ -218,6 +218,16 @@ namespace MechLabLibrary.ViewModel
             foreach (var mechObjectView in ObjectViewCollection) mechObjectView.UpdateXYR();
         }
 
+        public async void SaveLabAsync()
+        {
+            _labData.Name = Name;
+            _labData.LabID = Simulator.ID;
+            _labData.ModifiedTime = DateTime.Now;
+            await _mechLabServices.SaveMechLab(_labData, Simulator._objects);
+            Debug.WriteLine(_labData.Name);
+            Debug.WriteLine(_labData.ModifiedTime);
+            Messenger.Default.Send<string>("", "UpdateHome");
+        }
 
 
         private RelayCommand _toggleEditingName;
@@ -237,13 +247,7 @@ namespace MechLabLibrary.ViewModel
             IsEditingObject = false;
             IsMovingObject = false;
             EditingObject = null;
-            _labData.Name = Name;
-            _labData.LabID = Simulator.ID;
-            _labData.ModifiedTime=DateTime.Now;
-            _mechLabServices.SaveMechLab(_labData,Simulator._objects);
-            Debug.WriteLine(_labData.Name);
-            Debug.WriteLine(_labData.ModifiedTime);
-            Messenger.Default.Send<string>("", "UpdateHome");
+            SaveLabAsync();
             IsSaved = true;
         }));
 

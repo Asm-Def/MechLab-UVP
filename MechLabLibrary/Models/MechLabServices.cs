@@ -81,7 +81,7 @@ namespace MechLabLibrary.Models
         /// </summary>
         /// <param name="mechLabData"></param>
         /// <param name="objects"></param>
-        public async void SaveMechLab(MechLabData mechLabData, List<MechObject> objects)
+        public async Task SaveMechLab(MechLabData mechLabData, List<MechObject> objects)
         {
             var mechObjects = new List<MechObjectData>();
             var LabID = mechLabData.LabID;
