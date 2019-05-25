@@ -5,12 +5,14 @@ using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace MechLabLibrary.Models
 {
     public class MechLabServices
     {
         private readonly MechLabContext _context;
+        private Mutex Working = new Mutex();
         public MechLabServices() =>  _context = new MechLabContext();
         public MechLabServices(MechLabContext context) => _context = context;
 
@@ -20,7 +22,10 @@ namespace MechLabLibrary.Models
         /// <returns></returns>
         public async Task<List<MechLabData>> GetMechLabs()
         {
-            return await _context.Labs.ToListAsync();
+            Working.WaitOne();
+            List<MechLabData> res = await (new MechLabContext()).Labs.ToListAsync();
+            Working.ReleaseMutex();
+            return res;
         }
 
         ///// <summary>
@@ -47,9 +52,12 @@ namespace MechLabLibrary.Models
         //    return objects;
         //}
 
-        public  MechLabData GetLabData(Guid LabID)
+        public MechLabData GetLabData(Guid LabID)
         {
-            return  _context.Labs.FirstOrDefault(o => o.LabID == LabID);
+            Working.WaitOne();
+            MechLabData res = (new MechLabContext()).Labs.FirstOrDefault(o => o.LabID == LabID);
+            Working.ReleaseMutex();
+            return res;
         }
 
         /// <summary>
@@ -59,7 +67,13 @@ namespace MechLabLibrary.Models
         /// <returns></returns>
         public async Task<MechSimulator> GetSimulator(Guid LabID)
         {
-            IEnumerable<MechObjectData> objectDatas = await _context.Objects.Where<MechObjectData>(o => o.LabID == LabID).ToListAsync();
+            Working.WaitOne();
+            IEnumerable<MechObjectData> objectDatas = null;
+            using (var context = new MechLabContext())
+            {
+                objectDatas = await context.Objects.Where(o => o.LabID == LabID).ToListAsync();
+            }
+            Working.ReleaseMutex();
             List<MechObject> objects = new List<MechObject>();
             MechSimulator sim = new MechSimulator(LabID);
             foreach (var obj in objectDatas)
@@ -92,18 +106,32 @@ namespace MechLabLibrary.Models
                 else
                     mechObjects.Add(new MechObjectData { LabID = LabID, ObjectID=obj.ID, Type="Object", X=obj.X, Y=obj.Y, VX=obj.VX, VY=obj.VY, M=obj.M });
             }
-            if(MechLabExists(mechLabData.LabID))
-            {
-                Debug.WriteLine(mechLabData.LabID);
-                _context.Labs.Update(mechLabData);
-                _context.Objects.RemoveRange(_context.Objects.Where<MechObjectData>(e => e.LabID == LabID));
-            }
-            else _context.Labs.Add(mechLabData);
 
-            _context.Objects.AddRange(mechObjects);
-            await _context.SaveChangesAsync();
+            Working.WaitOne();
+            using (var context = new MechLabContext())
+            {
+                if (MechLabExists(mechLabData.LabID))
+                {
+                    Debug.WriteLine(mechLabData.LabID);
+                    context.Labs.Update(mechLabData);
+
+                    context.Objects.RemoveRange(context.Objects.Where<MechObjectData>(e => e.LabID == LabID));
+                    await context.SaveChangesAsync();
+                    //await _context.Entry(mechLabData).ReloadAsync();
+
+                }
+                else
+                {
+                    context.Labs.Add(mechLabData);
+                    await context.SaveChangesAsync();
+                }
+
+                context.Objects.AddRange(mechObjects);
+                await context.SaveChangesAsync();
+            }
+            Working.ReleaseMutex();
         }
 
-        private bool MechLabExists(Guid ID) => _context.Labs.Any(e => e.LabID == ID);
+        private bool MechLabExists(Guid ID) => (new MechLabContext()).Labs.Any(e => e.LabID == ID);
     }
 }

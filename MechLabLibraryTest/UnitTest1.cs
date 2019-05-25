@@ -56,9 +56,9 @@ namespace Tests
         public void TestServices()
         {
             MechLabServices mechLabServices = new MechLabServices();
-            List<MechLabData> tmp = mechLabServices.GetMechLabs().Result;
+            List<MechLabData> tmp = mechLabServices.GetMechLabs().GetAwaiter().GetResult();
             Console.WriteLine(tmp);
-            mechLabServices.SaveMechLab(new MechLabData(), new List<MechObject>());
+            mechLabServices.SaveMechLab(new MechLabData(), new List<MechObject>()).GetAwaiter().GetResult();
 
         }
 

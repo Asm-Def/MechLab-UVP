@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using MechLabLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MechLab_UVP
 {
@@ -31,6 +33,11 @@ namespace MechLab_UVP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            using (var db = new MechLabContext())
+            {
+                db.Database.Migrate();
+            }
         }
 
         /// <summary>

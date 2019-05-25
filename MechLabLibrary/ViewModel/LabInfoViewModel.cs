@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MechLabLibrary.Models;
+using System.Threading.Tasks;
 
 namespace MechLabLibrary.ViewModel
 {
@@ -29,9 +30,9 @@ namespace MechLabLibrary.ViewModel
             });
         }
 
-        private void GetLabAll()
+        private async void GetLabAll()
         {
-            var labs = _mechLabServices.GetMechLabs().Result;
+            var labs = await _mechLabServices.GetMechLabs();
             labs.ForEach((e) =>
             {
                 Debug.WriteLine(e.LabID);
@@ -40,6 +41,7 @@ namespace MechLabLibrary.ViewModel
             });
             Debug.WriteLine(labs.Count);
             MechLabDataCollection = new ObservableCollection<MechLabData>(labs);
+
         }
 
         

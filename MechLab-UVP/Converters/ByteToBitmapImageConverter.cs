@@ -11,13 +11,14 @@ namespace MechLab_UVP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            byte[] imageBytes = (byte[]) value;
-            if (imageBytes==null)
-            {
-                Debug.WriteLine("convert image is null");
-                return new BitmapImage();
-            }
-            return ConvertByteToImage(imageBytes).Result;
+            return new BitmapImage();
+            //byte[] imageBytes = (byte[]) value;
+            //if (imageBytes==null)
+            //{
+            //    Debug.WriteLine("convert image is null");
+            //    return new BitmapImage();
+            //}
+            //return ConvertByteToImage(imageBytes).Result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -28,14 +29,12 @@ namespace MechLab_UVP.Converters
         private async Task<BitmapImage> ConvertByteToImage(byte[] imageBytes)
         {
             BitmapImage image = new BitmapImage();
-            using (var randomAccessStream = new InMemoryRandomAccessStream())
+            var randomAccessStream = new InMemoryRandomAccessStream();
+            var writer = new DataWriter(randomAccessStream.GetOutputStreamAt(0));
             {
-                using (var writer = new DataWriter(randomAccessStream.GetOutputStreamAt(0)))
-                {
-                    writer.WriteBytes(imageBytes);
-                    await writer.StoreAsync();
-                    await image.SetSourceAsync(randomAccessStream);
-                }
+                writer.WriteBytes(imageBytes);
+                await writer.StoreAsync();
+                await image.SetSourceAsync(randomAccessStream);
             }
             return image;
         }

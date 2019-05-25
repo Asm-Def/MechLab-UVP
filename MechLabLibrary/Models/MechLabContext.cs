@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace MechLabLibrary.Models {
     public class MechLabContext : DbContext
@@ -10,8 +11,8 @@ namespace MechLabLibrary.Models {
         public DbSet<MechObjectData> Objects { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlite("Data Source=labs.db");
-            optionsBuilder.UseInMemoryDatabase("labs");
+            optionsBuilder.UseSqlite("Data Source=labs.db");
+            //optionsBuilder.UseInMemoryDatabase("labs");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,7 +11,7 @@ namespace MechLabLibrary.Models
         /// </summary>
         private int _nextID = 0;
 
-        public List<MechObject> _objects = new List<MechObject>();
+        public List<MechObject> _objects;
 
         /// <summary>
         /// 控制模拟的进行，当Running=true时持续对_objects进行模拟
@@ -88,8 +88,8 @@ namespace MechLabLibrary.Models
         /// 场景编号
         /// </summary>
         public Guid ID { get; set; }
-        public MechSimulator() { ID = Guid.NewGuid(); }
-        public MechSimulator(Guid ID) { this.ID = ID; }
+        public MechSimulator() { ID = Guid.NewGuid(); _objects = new List<MechObject>(); }
+        public MechSimulator(Guid ID) { this.ID = ID; _objects = new List<MechObject>(); }
         public MechSimulator(Guid ID, List<MechObject> objects) : this(ID)
         {
             foreach (var obj in objects) AddObject(obj);
