@@ -5,10 +5,13 @@ using MechLabLibrary.Models;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Threading;
 
 namespace MechLabLibrary.ViewModel
 {
-    public class MechObjectView : INotifyPropertyChanged
+    public class MechObjectView : ViewModelBase
     {
 
         /// <summary>
@@ -42,19 +45,19 @@ namespace MechLabLibrary.ViewModel
         public double VX
         {
             get => _mechObject.VX;
-            set { _mechObject.VX = value; OnPropertyChanged(); }
+            set { _mechObject.VX = value; OnPropertyChanged("VX"); }
         }
 
         public double VY
         {
             get => _mechObject.VY;
-            set { _mechObject.VY = value; OnPropertyChanged(); }
+            set { _mechObject.VY = value; OnPropertyChanged("VY"); }
         }
 
         public double M
         {
             get => _mechObject.M;
-            set { _mechObject.M = value; OnPropertyChanged(); }
+            set { _mechObject.M = value; OnPropertyChanged("M"); }
         }
 
         public double Speed
@@ -96,12 +99,14 @@ namespace MechLabLibrary.ViewModel
         protected MechObject _mechObject;
         protected MechLabViewModel _parent;
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged(string propertyName = "")
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                RaisePropertyChanged(propertyName);
+                //访问VM的属性
+            });
         }
 
         public MechObjectView(int ID, MechObject mechObject, MechLabViewModel mechLab)

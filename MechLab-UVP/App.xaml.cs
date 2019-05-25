@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Threading;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,6 +72,7 @@ namespace MechLab_UVP
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
             }
+            DispatcherHelper.Initialize();
         }
 
         /// <summary>

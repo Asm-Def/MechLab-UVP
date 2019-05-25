@@ -9,11 +9,47 @@ using System.Collections.Generic;
 
 namespace Tests
 {
+    public class TestMain
+    {
+        public void Test()
+        {
+            MechLabViewModel viewModel = new MechLabViewModel();
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader("input.txt", Encoding.Default);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
+            String line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] sArr = line.Split(' ');
+                double x = double.Parse(sArr[0]);
+                double y = double.Parse(sArr[1]);
+                double vx = double.Parse(sArr[2]);
+                double vy = double.Parse(sArr[3]);
+                double m = double.Parse(sArr[4]);
+                double r = double.Parse(sArr[5]);
+
+                viewModel.AddPlanetView(x, y, vx, vy, m, r);
+            }
+
+            {
+                viewModel.StartRunningCommand.Execute(null);
+                Console.ReadLine();
+                viewModel.StopRunningCommand.Execute(null);
+            }
+        }
+    }
     public class Tests
     {
         [SetUp]
         public void Setup()
         {
+
         }
 
         [Test]
