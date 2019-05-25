@@ -206,6 +206,7 @@ namespace MechLabLibrary.ViewModel
                     Debug.WriteLine(mechObjectView.ID);
                     EditingObject = (MechPlanetView)mechObjectView;
                     IsEditingObject = true;
+                    IsMovingObject = true;
                     break;
                 }
 
@@ -240,7 +241,7 @@ namespace MechLabLibrary.ViewModel
             _labData.LabID = Simulator.ID;
             _labData.ModifiedTime=DateTime.Now;
             _mechLabServices.SaveMechLab(_labData,Simulator._objects);
-            Messenger.Default.Send("UpdateHome",null);
+            Messenger.Default.Send<string>("", "UpdateHome");
             IsSaved = true;
         }));
 
@@ -272,7 +273,11 @@ namespace MechLabLibrary.ViewModel
         public RelayCommand StartRunningCommand => _startRunningCommand ??
                                                    (_startRunningCommand = new RelayCommand(() =>
                                                    {
+                                                       IsEditingName = false;
+                                                       IsEditingObject = false;
+                                                       IsMovingObject = false;
                                                        IsRunning = true;
+                                                       EditingObject = null;
                                                        Simulator.Start();
                                                    }));
 

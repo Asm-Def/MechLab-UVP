@@ -22,7 +22,7 @@ namespace MechLabLibrary.ViewModel
         {
             _mechLabServices = new MechLabServices();
             GetLabAll();
-            Messenger.Default.Register<object>(this,"UpdateHome", (obj) =>
+            Messenger.Default.Register<string>(this,"UpdateHome", (s) =>
             {
                 Debug.WriteLine("Received Message UpdateHome");
                 GetLabAll();
