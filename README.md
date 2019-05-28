@@ -1,6 +1,6 @@
 # MechLab-UVP
 
-### Currently Only 2D Celestial Operation Simulation (Without Collision) Supported
+### Currently Only 2D Celestial Movement Simulation (Without Collision) Supported
 
 ## TODO:
 
